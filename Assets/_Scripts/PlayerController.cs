@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 movement;
     private Animator _animator;
     private Rigidbody _rigidbody;
+    public AudioSource _audioSorce;
 
     [SerializeField]
     private float turnSpeed;
@@ -19,6 +20,8 @@ public class PlayerController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
+        _audioSorce = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -32,6 +35,18 @@ public class PlayerController : MonoBehaviour
         bool hasHorizontalInput = !Mathf.Approximately(horizontal , 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;
+
+        if (isWalking)
+        {
+            if (!_audioSorce.isPlaying)
+            {
+                _audioSorce.Play();
+            }
+        }
+        else
+        {
+            _audioSorce.Stop();
+        }
 
         _animator.SetBool("IsWalking", isWalking);
         Vector3 desiredForeward = Vector3.RotateTowards(transform.forward, movement, Time.fixedDeltaTime * turnSpeed, 0f);
